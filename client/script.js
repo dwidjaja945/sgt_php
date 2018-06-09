@@ -157,7 +157,7 @@ function calculateGradeAverage(arrayofStudents) {
     var gradeArray = [];
     var average = null;
     for (var i = 0; i < arrayofStudents.length; i++) {
-        gradeArray.push(parseFloat(arrayofStudents[i].grade));
+        gradeArray.push(parseFloat(arrayofStudents[i].grade_value));
     }
     function totalGradePoints(sum, nextNum) {
         return sum + nextNum
@@ -279,10 +279,9 @@ function sendDataToServer(studentObj, name, course, grade) {
 
 function deleteDataFromServer(studentObj, arrayOfStudents) {
     var ajaxDelete = {
-        url: "http://s-apis.learningfuze.com/sgt/delete",
+        url: "../server/delete_student.php",
         method: "POST",
         data: {
-            api_key: 'tD3GKQ3kHH',
             student_id: studentObj.id
         },
         success: function (results) {

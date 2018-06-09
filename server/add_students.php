@@ -8,7 +8,7 @@ $output = [
     'errors' => []
 ];
 
-$data = json_decode(file_get_contents('php://input'), true);
+// $data = json_decode(file_get_contents('php://input'), true);
 
 $student_name = $_POST['student_name'];
 $class_name = $_POST['class_name'];
