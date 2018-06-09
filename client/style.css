@@ -32,6 +32,6 @@
     font-size: 2em;
 }
 
-#input {
+#studentName, #course, #studentGrade {
     z-index:0;
 }

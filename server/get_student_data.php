@@ -1,6 +1,6 @@
 <?php
 
-require_once('./config/mysqlCredentials.php');
+require_once('../config/mysqlCredentials.php');
 
 $output = [
     'success' => false,
@@ -9,12 +9,8 @@ $output = [
 ];
 
 $query = "
-    SELECT students.first_name, students.last_name, grades.grade_value, classes.class_name
+    SELECT id, student_name, grade_value, class_name
     FROM grades
-    JOIN students
-        ON students.id = grades.student_id
-    JOIN classes
-        ON classes.id = grades.class_id
     ORDER BY class_name";
 // print($query);
 $result = mysqli_query( $connection , $query );
@@ -38,8 +34,4 @@ mysqli_close($connection);
 $json_output = json_encode($output);
 
 print $json_output;
-
-
-
-
 ?>

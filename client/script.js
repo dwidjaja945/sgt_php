@@ -24,9 +24,9 @@ $(document).ready(initializeApp);
 var studentArray = [];
 class Student {
     constructor(name, course, grade) {
-        this.name = name;
-        this.course = course;
-        this.grade = grade;
+        this.student_name = name;
+        this.class_name = course;
+        this.grade_value = grade;
     }
 }
 
@@ -105,7 +105,7 @@ function clearAddStudentFormInputs() {
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
 function renderStudentOnDom(studentObj, index) {
-    var studentName = studentObj.first_name + " " +  studentObj.last_name;
+    var studentName = studentObj.student_name;
     var studentCourse = studentObj.class_name;
     var studentGrade = studentObj.grade_value;
     var studentNameData = $("<td>").text(studentName);
@@ -196,7 +196,7 @@ function getDataFromServer() {
     var ajaxCall = {
         dataType: 'json',
         // url: 'https://s-apis.learningfuze.com/sgt/get',
-        url: '../get_student_data.php',
+        url: '../server/get_student_data.php',
         // method: 'POST',
         method: 'GET',
         // data: {
@@ -209,7 +209,6 @@ function getDataFromServer() {
             }
             updateStudentList(studentArray);
             $(".noData").css("display", "none");
-            console.log(res)
         },
         error: function () {
             $(".modal").css("display", "block");
@@ -228,17 +227,17 @@ function getDataFromServer() {
  * @returns {undefined} none
  */
 function sendDataToServer(studentObj, name, course, grade) {
+    var outData = {
+        student_name: studentObj.student_name,
+        class_name: studentObj.class_name,
+        grade_value: studentObj.grade_value
+    }
+    console.log(outData);
     var ajaxSend = {
-        url: "http://s-apis.learningfuze.com/sgt/create",
+        url: "../server/add_students.php",
         method: 'POST',
         dataType: "JSON",
-        data: {
-            api_key: 'tD3GKQ3kHH',
-            // id : arrayOfStudents.length,
-            name: studentObj.name,
-            course: studentObj.course,
-            grade: studentObj.grade
-        },
+        data: outData,
         success: function (results) {
             if (results.success) {
                 var newStudent = new Student(name, course, grade);
@@ -304,3 +303,14 @@ function deleteDataFromServer(studentObj, arrayOfStudents) {
     };
     $.ajax(ajaxDelete);
 }
+
+
+/***************************************************************************************************
+ * onGradeKeyPress - Makes sure that whatever the user types in the grade section will be a number
+ */
+
+ function onGradeKeyPress() {
+     if (isNaN($("#studentGrade").val())) {
+         $("#studentGrade").val("");
+     }
+ };
