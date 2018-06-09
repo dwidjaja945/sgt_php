@@ -32,23 +32,23 @@
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-user"></span>
                 </span>
-                <input type="text" id='input' class="col form-control col-sm input-sm" name="studentName" id="studentName" placeholder="Student Name">
+                <input type="text" class="col form-control col-sm input-sm" name="studentName" id="studentName" placeholder="Student Name">
             </div>
             <div class="form-group input-group">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-th-list"></span>
                 </span>
-                <input type="text" id='input' class="col form-control col-sm input-sm" name="course" id="course" placeholder="Student Course">
+                <input type="text" class="col form-control col-sm input-sm" name="course" id="course" placeholder="Student Course">
             </div>
             <div class="form-group input-group">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-education"></span>
                 </span>
-                <input type="text" id='input' class="col form-control col-sm input-sm" name="studentGrade" id="studentGrade" placeholder="Student Grade">
+                <input type="text" class="col form-control col-sm input-sm" name="studentGrade" id="studentGrade" placeholder="Student Grade" onkeyup="onGradeKeyPress()">
             </div>
             <button type="button" class="btn btn-default btn-success addButton" onclick="">Add</button>
             <button type="button" class="btn btn-default cancelButton" onclick="">Cancel</button>
-            <button type="button" class="btn btn-default btn-primary getServerDataButton" onclick="">Get Data From Server</button>
+
         </div>
         <div class="pull-left col-lg-8 student-list-container">
             <table class="table media-heading student-list">
