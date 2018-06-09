@@ -8,18 +8,30 @@ $output = [
     'errors' => []
 ];
 
+$order_by = 'NULL';
+
+if(isset($_POST['order_by'])) {
+    $order_by = $_POST['order_by'];
+};
+
 $query = "
     SELECT id, student_name, grade_value, class_name
     FROM grades
-    ORDER BY class_name";
-// print($query);
-$result = mysqli_query( $connection , $query );
+    ORDER BY ?";
 
-// print_r($result);
+$inserts = [$order_by];
+
+$statement = $connection->prepare($query);
+$statement->bind_param("s" , ...$inserts);
+$statement->execute();
+$result = $statement->get_result();
+// $result = mysqli_query( $connection , $query );
+
 if($result) {
     if(mysqli_num_rows($result) > 0) {
         $output['success'] = true;
         while( $row = mysqli_fetch_assoc($result) ) {
+            print_r($row);
             $output['data'][] = $row;
         };
     } else {

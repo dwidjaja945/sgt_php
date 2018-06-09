@@ -52,6 +52,9 @@ function initializeApp() {
 function addClickHandlersToElements() {
     $(".addButton").click(handleAddClicked);
     $(".cancelButton").click(handleCancelClicked);
+    $("#student_name").click(() => {sortBy("student_name")});
+    $("#class_name").click( () => { sortBy("class_name") } );
+    $("#grade_value").click( () => { sortBy("grade_value")});
 }
 
 /***************************************************************************************************
@@ -313,3 +316,36 @@ function deleteDataFromServer(studentObj, arrayOfStudents) {
          $("#studentGrade").val("");
      }
  };
+
+
+
+/***************************************************************************************************
+ * sortBy - Sorts the data based off the column user clicks on
+ */
+
+function sortBy(column) {
+    var ajaxCall = {
+        dataType: 'JSON',
+        url: '../server/get_student_data.php',
+        method: 'POST',
+        data: {
+            order_by: column
+        },
+        success: function (results) {
+            console.log("server results: ", results);
+            for (var ajaxIndex = 0; ajaxIndex < results.data.length; ajaxIndex++) {
+                studentArray.push(results.data[ajaxIndex]);
+            }
+            updateStudentList(studentArray);
+            $(".noData").css("display", "none");
+        },
+        error: function () {
+            $(".modal").css("display", "block");
+            $(".modalMessage").text("Could not pull data from server.");
+            $("*").click(function () {
+                $(".modal").css("display", "none");
+            })
+        }
+    };
+    $.ajax(ajaxCall)
+};
