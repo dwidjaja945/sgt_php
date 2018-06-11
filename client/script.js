@@ -148,7 +148,6 @@ function updateStudentList(arrayOfStudents) {
         renderStudentOnDom(arrayOfStudents[i], i);
     }
 
-    calculateGradeAverage(arrayOfStudents);
     renderGradeAverage(calculateGradeAverage(arrayOfStudents));
 }
 /***************************************************************************************************
@@ -157,6 +156,7 @@ function updateStudentList(arrayOfStudents) {
  * @returns {number}
  */
 function calculateGradeAverage(arrayofStudents) {
+    debugger;
     var gradeArray = [];
     var average = null;
     for (var i = 0; i < arrayofStudents.length; i++) {
@@ -207,6 +207,7 @@ function getDataFromServer() {
         // },
         success: function (results) {
             console.log("server results: ", results);
+            studentArray.length = 0;
             for (var ajaxIndex = 0; ajaxIndex < results.data.length; ajaxIndex++) {
                 studentArray.push(results.data[ajaxIndex]);
             }
@@ -234,8 +235,30 @@ function sendDataToServer(studentObj, name, course, grade) {
         student_name: studentObj.student_name,
         class_name: studentObj.class_name,
         grade_value: studentObj.grade_value
+    };
+
+    if( name === "" || course === "" || grade === "") {
+        if ($(".inputMessage").text() !== "") {
+            return;
+        }
+        let emptyInputMessage = $("<h3>").text("Fields cannot be left blank").addClass("pull-left");
+        $(".inputMessage").append(emptyInputMessage);
+        return;
+    } else {
+        $(".inputMessage").text("");
     }
-    console.log(outData);
+
+    if (parseFloat(grade) > 100) {
+        if ($(".inputMessage").text() !== "" ) {
+            return;
+        }
+        let gradeTooHighMessage = $("<h3>").text("Grade too high").addClass("pull-left");
+        $(".inputMessage").append(gradeTooHighMessage);
+        return;
+    } else {
+        $(".inputMessage").text("");
+    };
+
     var ajaxSend = {
         url: "../server/add_students.php",
         method: 'POST',
@@ -314,6 +337,12 @@ function deleteDataFromServer(studentObj, arrayOfStudents) {
  function onGradeKeyPress() {
      if (isNaN($("#studentGrade").val())) {
          $("#studentGrade").val("");
+     };
+
+     const currentValue = $("#studentGrade").val();
+
+     if (currentValue.length > 3) {
+         $("#studentGrade").val(currentValue.slice(0, 3));
      }
  };
 
@@ -333,6 +362,7 @@ function sortBy(column) {
         },
         success: function (results) {
             console.log("server results: ", results);
+            studentArray.length = 0;
             for (var ajaxIndex = 0; ajaxIndex < results.data.length; ajaxIndex++) {
                 studentArray.push(results.data[ajaxIndex]);
             }
