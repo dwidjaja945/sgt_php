@@ -64,7 +64,7 @@ function addClickHandlersToElements() {
        none
  */
 function handleAddClicked(event) {
-    $(".noData").css("display", "none");
+    // $(".noData").css("display", "none");
     addStudent();
 }
 
@@ -121,10 +121,10 @@ function renderStudentOnDom(studentObj, index) {
 
     function deleteHandler() {
         deleteButton.click(function () {
+            debugger;
             $(tableRow).remove();
             studentArray.splice(index, 1);
-            renderGradeAverage(calculateGradeAverage(studentArray));
-            deleteDataFromServer(studentObj, studentArray)
+            deleteDataFromServer(studentObj, studentArray);
         })
     }
     deleteHandler();
@@ -156,28 +156,30 @@ function updateStudentList(arrayOfStudents) {
  * @returns {number}
  */
 function calculateGradeAverage(arrayofStudents) {
-    debugger;
     var gradeArray = [];
     var average = null;
+    var totalGradePoints = 0;
+    // Push into student array;
     for (var i = 0; i < arrayofStudents.length; i++) {
-        gradeArray.push(parseFloat(arrayofStudents[i].grade_value));
+        let studentGrade = parseFloat(arrayofStudents[i].grade_value);
+        gradeArray.push(studentGrade);
+        totalGradePoints += studentGrade;
+    };
+
+    function calculateAverage(totalGradePoints) {
+        debugger;
+        totalGradePoints = parseFloat(totalGradePoints);
+      if (gradeArray.length === 0) {
+        return 0;
+      }
+      average = totalGradePoints / gradeArray.length;
+      if (average === 100) {
+        return average;
+      } else {
+        return average.toPrecision(4);
+      }
     }
-    function totalGradePoints(sum, nextNum) {
-        return sum + nextNum
-    }
-    function calculateAverage() {
-        if (gradeArray.length === 0) {
-            return 0;
-        }
-        var total = gradeArray.reduce(totalGradePoints);
-        average = total / gradeArray.length;
-        if (average === 100) {
-            return average;
-        } else {
-            return average.toPrecision(4);
-        }
-    }
-    return calculateAverage();
+    return calculateAverage(totalGradePoints);
 
 }
 /***************************************************************************************************
@@ -212,7 +214,11 @@ function getDataFromServer() {
                 studentArray.push(results.data[ajaxIndex]);
             }
             updateStudentList(studentArray);
-            $(".noData").css("display", "none");
+            if(results.data.length === 0) {
+                $(".noData").css("display", "block");
+            } else {
+                $(".noData").css("display", "none");
+            }
         },
         error: function () {
             $(".modal").css("display", "block");
@@ -237,6 +243,7 @@ function sendDataToServer(studentObj, name, course, grade) {
         grade_value: studentObj.grade_value
     };
 
+    // make sure inputs are not empty
     if( name === "" || course === "" || grade === "") {
         if ($(".inputMessage").text() !== "") {
             return;
@@ -248,10 +255,11 @@ function sendDataToServer(studentObj, name, course, grade) {
         $(".inputMessage").text("");
     }
 
+    // make sure that grade is not over 100
     if (parseFloat(grade) > 100) {
         if ($(".inputMessage").text() !== "" ) {
             return;
-        }
+        };
         let gradeTooHighMessage = $("<h3>").text("Grade too high").addClass("pull-left");
         $(".inputMessage").append(gradeTooHighMessage);
         return;
@@ -270,6 +278,9 @@ function sendDataToServer(studentObj, name, course, grade) {
                 newStudent.id = results.new_id;
                 studentArray.push(newStudent);
                 updateStudentList(studentArray);
+                if(studentArray.length > 0) {
+                    $(".noData").css("display", "none");
+                };
                 console.log(results);
                 console.log("sendDataToServer: success");
             } else {
@@ -280,6 +291,8 @@ function sendDataToServer(studentObj, name, course, grade) {
                 });
                 if (studentArray.length === 0) {
                     $(".noData").css("display", "block");
+                } else {
+                    $(".noData").css("display", "none");
                 }
             }
         },
@@ -311,12 +324,15 @@ function deleteDataFromServer(studentObj, arrayOfStudents) {
             student_id: studentObj.id
         },
         success: function (results) {
+            debugger;
             console.log("deleteDataFromServer success");
             console.log(results);
-            $(".noData").css("display", "none");
             if (studentArray.length === 0) {
                 $(".noData").css("display", "block");
-            }
+            } else {
+                $(".noData").css("display", "none");
+            };
+            getDataFromServer();
         },
         error: function (errors) {
             $(".modal").css("display", "block");
@@ -367,7 +383,7 @@ function sortBy(column) {
                 studentArray.push(results.data[ajaxIndex]);
             }
             updateStudentList(studentArray);
-            $(".noData").css("display", "none");
+            // $(".noData").css("display", "none");
         },
         error: function () {
             $(".modal").css("display", "block");
