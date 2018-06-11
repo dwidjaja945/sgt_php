@@ -17,13 +17,14 @@ if(isset($_POST['order_by'])) {
 $query = sprintf("
     SELECT id, student_name, grade_value, class_name
     FROM grades
-    ORDER BY %s", $order);
+    ORDER BY %s", $order_by);
 
 
 // $inserts = [$order_by];
+
 // print_r($order_by);
 $statement = $connection->prepare($query);
-// 
+// $statement->bind_param("s" , $order_by);
 $statement->execute();
 $result = $statement->get_result();
 // $result = mysqli_query( $connection , $query );
@@ -45,5 +46,5 @@ mysqli_close($connection);
 
 $json_output = json_encode($output);
 
-// print $json_output;
+print $json_output;
 ?>
